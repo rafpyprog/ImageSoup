@@ -120,9 +120,10 @@ class ImageSoup():
 
     def get_search_result_page(self, query, page_number=0):
         headers = {'User-Agent': self.user_agent}
-        google_images = 'https://www.google.com/search?q={}&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg&ijn={}'
-        response = requests.get(google_images.format(query, page_number),
-                                headers=headers)
+        base_url = 'https://www.google.com/search?'
+        google_images = 'q={}&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg&ijn={}'
+        url = base_url + query.format(page_number)
+        response = requests.get(url, headers=headers)
         if response.status_code != 200:
             raise('Error on search request - HTTP {}. Expected 200'.format(response.status_code))
         search_result_HTML = response.text

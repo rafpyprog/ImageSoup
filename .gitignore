@@ -1,6 +1,7 @@
 .coverage
 .cache/
 cover/
+dist/
 build/
 docs/_build
 requests.egg-info/
