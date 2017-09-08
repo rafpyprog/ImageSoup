@@ -1,5 +1,5 @@
-ImageSoup
-=========
+ImageSoup: Image Searching for Humans
+=====================================
 
 
 
