@@ -26,11 +26,14 @@ class ImageSize():
         if isinstance(value, (tuple, list)):
             width, height = value
             return self.name + ':{},iszw:{},iszh:{}'.format(self.values['exactly'], width, height)
-        else:            
+        else:
             return self.name + ':' + self.values[value]
 
-i = ImageSize()
-i.get_param([200, 200])
+class FileType():
+    pass
+
+class UsageRights():
+    pass
 
 
 class IMAGE_ASPECTS():
@@ -60,21 +63,22 @@ class IMAGE_ASPECTS():
     LARGER_THAN_40MP = '40mp'
     LARGER_THAN_70MP = '70mp'
 
+
 class URLParameters():
     ALL_THESE_WORDS = 'as_q'
     IMAGE_ASPECTS = 'tbs'
     PAGE_NUMBER = 'ijn'
     QUERY = 'q'
     SEARCH_TYPE = 'tbm'
-
-
-def query_builder(query, image_size=None, page_number=None):
     IMAGE_SEARCH = 'isch'
+
+def query_builder(query, image_size=None, aspect_ratio=None, page_number=1):
+
 
     param = URLParameters()
 
     params = {param.ALL_THESE_WORDS: query,
-              param.SEARCH_TYPE: IMAGE_SEARCH,
+              param.SEARCH_TYPE: param.IMAGE_SEARCH,
               param.IMAGE_SIZE: image_size,
               param.PAGE_NUMBER: str(page_number)}
 
