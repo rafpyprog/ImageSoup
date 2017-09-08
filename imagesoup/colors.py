@@ -5,6 +5,7 @@ import webcolors
 
 CSS3_COLORS = webcolors.CSS3_NAMES_TO_HEX.keys()
 
+
 def color_analysis(image):
     if image.mode != 'RGB':
         image = image.convert('RGB')

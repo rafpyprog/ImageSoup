@@ -1,0 +1,4 @@
+bs4>=4.5.3
+pillow>=4.4.1
+requests>=2.13.0
+webcolors

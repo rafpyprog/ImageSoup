@@ -1,0 +1,10 @@
+.coverage
+.cache/
+cover/
+build/
+docs/_build
+requests.egg-info/
+*.pyc
+*.swp
+*.egg
+env/
