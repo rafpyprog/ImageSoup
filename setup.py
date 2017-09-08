@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name = "imagesoup",
-    version = "0.0.2",
+    version = "0.0.5",
     author = "Rafael Alves Ribeiro",
     author_email = "rafael.alves.ribeiro@gmail.com",
     description = ("A Python library designed for quick search and "

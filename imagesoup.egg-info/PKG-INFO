@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: imagesoup
-Version: 0.0.2
+Version: 0.0.5
 Summary: A Python library designed for quick search and downloading images from Google Images.
 Home-page: http://packages.python.org/an_example_pypi_project
 Author: Rafael Alves Ribeiro
