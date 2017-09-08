@@ -9,7 +9,7 @@ import requests
 from requests.exceptions import HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-import colors
+from . import colors
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 

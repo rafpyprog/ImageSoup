@@ -1,4 +1,4 @@
-bs4
+beautifulsoup4>=4.5
 pillow
 requests
 webcolors

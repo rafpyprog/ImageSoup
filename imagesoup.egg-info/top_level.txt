@@ -1,2 +1,1 @@
 imagesoup
-tests

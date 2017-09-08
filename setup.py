@@ -1,6 +1,9 @@
 import os
 from setuptools import setup
 
+
+here = os.path.abspath(os.path.dirname(__file__))
+
 # Utility function to read the README file.
 # Used for the long_description.  It's nice, because now 1) we have a top level
 # README file and 2) it's easier to type in the README file than to put a raw
@@ -8,18 +11,23 @@ from setuptools import setup
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+about = {}
+with open(os.path.join(here, 'imagesoup', '__version__.py'), 'r', encoding='utf-8') as f:
+    exec(f.read(), about)
+
+packages = ['imagesoup']
+
 setup(
-    name = "imagesoup",
-    version = "0.0.5",
-    author = "Rafael Alves Ribeiro",
-    author_email = "rafael.alves.ribeiro@gmail.com",
-    description = ("A Python library designed for quick search and "
-                    "downloading images from Google Images."),
-    license = "MIT",
+    name=about['__title__'],
+    version=about['__version__'],
+    author=about['__author__'],
+    author_email=about['__author_email__'],
+    description=about['__description__'],
+    license=about['__license__'],
     keywords = "search image google",
-    url = "http://packages.python.org/an_example_pypi_project",
-    packages=['imagesoup', 'tests'],
-    install_requires=['bs4',
+    url = about['__url__'],
+    packages=packages,
+    install_requires=['beautifulsoup4>=4.5',
                       'pillow',
                       'requests',
                       'webcolors',
