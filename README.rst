@@ -1,5 +1,5 @@
-ImageSoup
-=========
+ImageSoup: Image Searching for Humans
+=====================================
 
 
 
@@ -27,3 +27,15 @@ ImageSoup
     >>> arya.main_color(n=2)
     [('black', 0.6219224422442244), ('darkslategrey', 0.27796204620462045)]
     >>> arya.to_file('arya.jpg')
+
+Installation
+------------
+
+To install ImageSoup, simply use pip:
+
+.. code-block:: bash
+
+    $ pip install imagesoup
+    
+
+
