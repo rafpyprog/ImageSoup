@@ -7,8 +7,7 @@ ImageSoup
     
     >>> from imagesoup import ImageSoup
     >>>
-    >>> soup = ImageSoup()
-    >>> soup.search('"Arya Stark"', n_images=10)
+    >>> soup = ImageSoup()    
     >>> images = soup.search('"Arya Stark"', n_images=10)
     >>>
     >>> arya = images[0]
