@@ -1,0 +1,14 @@
+README.rst
+setup.py
+imagesoup/__init__.py
+imagesoup/__version__.py
+imagesoup/colors.py
+imagesoup/imagesoup.py
+imagesoup/utils.py
+imagesoup.egg-info/PKG-INFO
+imagesoup.egg-info/SOURCES.txt
+imagesoup.egg-info/dependency_links.txt
+imagesoup.egg-info/requires.txt
+imagesoup.egg-info/top_level.txt
+tests/__init__.py
+tests/test.py
