@@ -1,92 +1,72 @@
 from six.moves.urllib.parse import urlencode
 
+FILE_TYPE_OPTIONS = {}
 
-class AspectRatio():
-    def __init__(self):
-        self.name = 'iar'
-        self.values = {'tall': 't',
-                       'square': 's',
-                       'wide': 'w',
-                       'panoramic': 'xw'}
+USAGE_RIGHT_OPTIONS = {}
 
-    def get_param(self, value):
-        return self.name + ':' + self.values[value]
+ASPECT_RATIO_OPTIONS = {'tall': 't', 'square': 's', 'wide': 'w',
+                        'panoramic': 'xw'}
 
+IMAGE_SIZE_OPTIONS = {'any': '', 'icon': 'i', 'medium': 'm', 'large': 'l',
+                      'exactly': 'ex', '400x300+': 'qsvga', '640x480+': 'vga',
+                      '800x600+': 'svga', '1024x768+': 'xga', '2mp+': '2mp',
+                      '4mp+': '4mp', '6mp+': '6mp', '8mp+': '8mp',
+                      '10mp+': '10mp', '12mp+': '12mp', '15mp+': '15mp',
+                      '20mp+': '20mp', '40mp+': '40mp', '70mp+': '70mp'}
 
-class ImageSize():
-    def __init__(self):
-        self.name = 'isz'
-        self.values = {'any': '',
-                       'icon': 'i',
-                       'medium': 'm',
-                       'large': 'l',
-                       'exactly': 'ex'}
+def aspect_ratio_paramenter(option):
+    if not option:
+        return None
 
-    def get_param(self, value):
-        if isinstance(value, (tuple, list)):
-            width, height = value
-            return self.name + ':{},iszw:{},iszh:{}'.format(self.values['exactly'], width, height)
-        else:
-            return self.name + ':' + self.values[value]
-
-class FileType():
-    pass
-
-class UsageRights():
-    pass
+    ASPECT_RATIO_PARAM = 'iar'
+    return ASPECT_RATIO_PARAM + ':' + ASPECT_RATIO_OPTIONS[option]
 
 
-class IMAGE_ASPECTS():
-        '''
-    Set of suported image size parameters.
-    '''
-    ANY = ''
-    ICON = 'i'
-    MEDIUM = 'm'
-    LARGE = 'l'
+def image_size_parameter(option):
+    if not option:
+        return None
 
-    LARGER_THAN_400_300 = 'qsvga'
-    LARGER_THAN_640_480 = 'vga'
-    LARGER_THAN_800_600 = 'svga'
-    LARGER_THAN_1024_768 = 'xga'
-
-    EXACTLY = 'ex'
-
-    LARGER_THAN_2MP = '2mp'
-    LARGER_THAN_4MP = '4mp'
-    LARGER_THAN_6MP = '6mp'
-    LARGER_THAN_8MP = '8mp'
-    LARGER_THAN_10MP = '10mp'
-    LARGER_THAN_12MP = '12mp'
-    LARGER_THAN_15MP = '15mp'
-    LARGER_THAN_20MP = '20mp'
-    LARGER_THAN_40MP = '40mp'
-    LARGER_THAN_70MP = '70mp'
+    IMAGE_SIZE_PARAM = 'isz'
+    if isinstance(option, (tuple, list)):
+        width, height = option
+        return IMAGE_SIZE_PARAM + ':{},iszw:{},iszh:{}'.format(IMAGE_SIZE_OPTIONS['exactly'], width, height)
+    else:
+        return IMAGE_SIZE_PARAM + ':' + IMAGE_SIZE_OPTIONS[option]
 
 
-class URLParameters():
-    ALL_THESE_WORDS = 'as_q'
-    IMAGE_ASPECTS = 'tbs'
-    PAGE_NUMBER = 'ijn'
-    QUERY = 'q'
+def image_aspect_parameters(aspect_ratio, image_size):
+    if any([aspect_ratio, image_size]) is False:
+        return None
+    else:
+        IMAGE_RELATED = 'tbs='
+        options = ','.join([i for i in [aspect_ratio, image_size] if i is not None])
+        return '{}{}'.format(IMAGE_RELATED, options)
+
+
+def query_builder(query, image_size=None, aspect_ratio=None, page_number=0):
+    if query is None:
+        raise ValueError('query must have a value.')
+
     SEARCH_TYPE = 'tbm'
-    IMAGE_SEARCH = 'isch'
+    IMAGES = 'isch'
+    SEARCH_TYPE_PARAM = '='.join([SEARCH_TYPE, IMAGES])
+    BASE_URL = 'https://www.google.com/search?' + SEARCH_TYPE_PARAM
 
-def query_builder(query, image_size=None, aspect_ratio=None, page_number=1):
+    # Add page number
+    PAGE_NUMBER = 'ijn'
+    page_number_param = '='.join([PAGE_NUMBER, str(page_number)])
+    URL = '&'.join([BASE_URL, page_number_param])
 
+    # Add query value
+    QUERY_TYPE = 'q'
+    query_param = '='.join([QUERY_TYPE, str(query)])
+    URL = '&'.join([URL, query_param])
 
-    param = URLParameters()
+    # Add image aspects parameters
+    iar = aspect_ratio_paramenter(aspect_ratio)
+    isz = image_size_parameter(image_size)
+    image_aspect_param = image_aspect_parameters(iar, isz)
+    if image_aspect_param is not None:
+        URL = '&'.join([URL, image_aspect_param])
 
-    params = {param.ALL_THESE_WORDS: query,
-              param.SEARCH_TYPE: param.IMAGE_SEARCH,
-              param.IMAGE_SIZE: image_size,
-              param.PAGE_NUMBER: str(page_number)}
-
-    base_url = 'https://www.google.com/search?'
-    url = base_url + '&'.join([param + '=' + value for param, value in params.items() if value])
-    return url
-
-
-https://www.google.com/search?as_st=y&tbm=isch&as_q=folheto+supermercado&as_epq=&as_oq=&as_eq=&cr=&as_sitesearch=&safe=images&tbs=isz:l,iar:t
-
-query_builder('python', page_number=1, image_size=Size.ICON)
+    return URL
