@@ -1,4 +1,6 @@
 beautifulsoup4>=4.5.3
 pillow>=4.2
+pytest
+pytest-cov
 requests>=2.13.0
 webcolors
