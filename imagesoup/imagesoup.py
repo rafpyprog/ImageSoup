@@ -10,6 +10,8 @@ from requests.exceptions import HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from . import colors
+from . import parameters
+
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -118,12 +120,9 @@ class ImageSoup():
     def __init__(self):
         self.user_agent = self.user_agent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
 
-    def get_search_result_page(self, query, page_number=0):
+    def get_search_result_page(self, URL):
         headers = {'User-Agent': self.user_agent}
-        base_url = 'https://www.google.com/search?'
-        google_images = 'q={}&espv=2&biw=1366&bih=667&site=webhp&source=lnms&tbm=isch&sa=X&ei=XosDVaCXD8TasATItgE&ved=0CAcQ_AUoAg&ijn={}'
-        url = base_url + query.format(page_number)
-        response = requests.get(url, headers=headers)
+        response = requests.get(URL, headers=headers)
         if response.status_code != 200:
             raise('Error on search request - HTTP {}. Expected 200'.format(response.status_code))
         search_result_HTML = response.text
@@ -142,14 +141,15 @@ class ImageSoup():
             results.append(ImageResult(URL))
         return results
 
-    def search(self, query, n_images=100):
+    def search(self, query, image_size=None, aspect_ratio=None, n_images=100):
         FIRST_SEARCH_RESULT_PAGE = 0
         RESULTS_PER_PAGE = 100  # Returned by Google Images
         LAST_SEARCH_RESULT_PAGE = math.ceil(n_images / RESULTS_PER_PAGE)
 
         images_results = []
         for page_number in range(FIRST_SEARCH_RESULT_PAGE, LAST_SEARCH_RESULT_PAGE):
-            HTML = self.get_search_result_page(query, page_number)
+            URL = parameters.query_builder(query, image_size, aspect_ratio, page_number)
+            HTML = self.get_search_result_page(URL)
             images_data = self.get_images_data_from_HTML(HTML)
             if len(images_data) == 0:  # end of results. stop interating
                 msg = 'Search query "{}" returned only {} images.'
