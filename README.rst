@@ -1,8 +1,12 @@
 ImageSoup: Image Searching for Humans
 =====================================
 
+
 .. image:: https://travis-ci.org/rafpyprog/ImageSoup.svg?branch=master
   :target: https://travis-ci.org/rafpyprog/ImageSoup
+
+.. image:: https://codecov.io/gh/rafpyprog/ImageSoup/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/rafpyprog/ImageSoup
 
   
 Basic Tutorial  
