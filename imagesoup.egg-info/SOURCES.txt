@@ -4,6 +4,7 @@ imagesoup/__init__.py
 imagesoup/__version__.py
 imagesoup/colors.py
 imagesoup/imagesoup.py
+imagesoup/parameters.py
 imagesoup/utils.py
 imagesoup.egg-info/PKG-INFO
 imagesoup.egg-info/SOURCES.txt

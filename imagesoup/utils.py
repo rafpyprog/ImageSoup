@@ -9,8 +9,7 @@ class Blacklist():
 
     def create_file(self):
         if os.path.isfile(self.filename) is False:
-            with open(self.filename, 'w') as f:
-                pass
+            open(self.filename, 'w').close()
 
     def reset(self):
         open(self.filename, 'w').close()

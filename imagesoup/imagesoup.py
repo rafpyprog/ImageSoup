@@ -1,4 +1,3 @@
-import os
 import io
 import json
 import math
@@ -40,7 +39,7 @@ class ImageResult():
     def verify(self):
         try:
             self._im.load()
-        except OSError as e:
+        except OSError:
             print('Cannot identify image file from {}'.format(self.URL))
             return False
         else:
@@ -131,7 +130,7 @@ class ImageSoup():
 
     def get_images_data_from_HTML(self, HTML):
         soup = BeautifulSoup(HTML, 'html.parser')
-        divs_has_class = [div for div in soup.findAll("div") if div.has_attr('class') == True]
+        divs_has_class = [div for div in soup.findAll("div") if div.has_attr('class') is True]
         images_data = [div for div in divs_has_class if div['class'] == ['rg_meta', 'notranslate']]
         return images_data
 
@@ -155,9 +154,7 @@ class ImageSoup():
             if len(images_data) == 0:  # end of results. stop interating
                 msg = 'Search query "{}" returned only {} images.'
                 print(msg.format(query, len(images_results)))
-                end_page = page_number
                 break
             images_results.extend(self.get_images_results(images_data))
-            end_page = page_number + 1
         search_result = images_results[:n_images]
         return search_result

@@ -11,7 +11,7 @@ def color_analysis(image):
         image = image.convert('RGB')
 
     # initialize a Counter starting from zero
-    color_counter = Counter({color:0 for color in Counter(CSS3_COLORS)})
+    color_counter = Counter({color: 0 for color in Counter(CSS3_COLORS)})
     for pixel_count, RGB in image.getcolors(image.width * image.height):
         color_name = get_color_name(RGB)
         color_counter[color_name] += pixel_count
@@ -36,7 +36,7 @@ def closest_color(requested_color):
 
 def get_color_name(requested_color):
     try:
-        color_name = actual_name = webcolors.rgb_to_name(requested_color)
+        color_name = webcolors.rgb_to_name(requested_color)
     except ValueError:
         color_name = closest_color(requested_color)
     return color_name

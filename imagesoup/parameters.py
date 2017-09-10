@@ -1,5 +1,3 @@
-from six.moves.urllib.parse import urlencode
-
 FILE_TYPE_OPTIONS = {}
 
 USAGE_RIGHT_OPTIONS = {}
@@ -13,6 +11,7 @@ IMAGE_SIZE_OPTIONS = {'any': '', 'icon': 'i', 'medium': 'm', 'large': 'l',
                       '4mp+': '4mp', '6mp+': '6mp', '8mp+': '8mp',
                       '10mp+': '10mp', '12mp+': '12mp', '15mp+': '15mp',
                       '20mp+': '20mp', '40mp+': '40mp', '70mp+': '70mp'}
+
 
 def aspect_ratio_paramenter(option):
     if not option:

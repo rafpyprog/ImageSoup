@@ -6,10 +6,19 @@ Home-page: https://github.com/rafpyprog/ImageSoup
 Author: Rafael Alves Ribeiro
 Author-email: rafael.alves.ribeiro@gmail.com
 License: MIT
-Description: ImageSoup
-        =========
+Description: ImageSoup: Image Searching for Humans
+        =====================================
         
         
+        .. image:: https://travis-ci.org/rafpyprog/ImageSoup.svg?branch=master
+          :target: https://travis-ci.org/rafpyprog/ImageSoup
+        
+        .. image:: https://codecov.io/gh/rafpyprog/ImageSoup/branch/master/graph/badge.svg
+          :target: https://codecov.io/gh/rafpyprog/ImageSoup
+        
+          
+        Basic Tutorial  
+        --------------
         
         .. code-block:: python
             
@@ -35,6 +44,18 @@ Description: ImageSoup
             >>> arya.main_color(n=2)
             [('black', 0.6219224422442244), ('darkslategrey', 0.27796204620462045)]
             >>> arya.to_file('arya.jpg')
+        
+        Installation
+        ------------
+        
+        To install ImageSoup, simply use pip:
+        
+        .. code-block:: bash
+        
+            $ pip install imagesoup
+            
+        
+        
         
 Keywords: search image google
 Platform: UNKNOWN

@@ -5,6 +5,7 @@ dist/
 build/
 docs/_build
 requests.egg-info/
+*.pdf
 *.pyc
 *.swp
 *.egg
