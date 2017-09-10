@@ -44,4 +44,4 @@ class Blacklist():
         for domain in self.domains:
             exclude_domain = exclude + domain + ' '
             query_string = query_string + exclude_domain
-        return query_string
+        return query_string.strip()

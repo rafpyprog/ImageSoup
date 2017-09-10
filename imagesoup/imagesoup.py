@@ -42,6 +42,7 @@ class ImageResult():
             self._im.load()
         except OSError as e:
             print('Cannot identify image file from {}'.format(self.URL))
+            return False
         else:
             return True
 
