@@ -39,7 +39,7 @@ class ImageResult():
     def verify(self):
         try:
             self._im.load()
-        except OSError:
+        except (IOError, OSError):
             print('Cannot identify image file from {}'.format(self.URL))
             return False
         else:
@@ -103,8 +103,11 @@ class ImageResult():
 
     def reduce(self, new_height=100):
         ''' Reduce an image to a new_height keeping proportions '''
-        ratio = new_height / self.height
-        size = int(self.width * ratio), int(self.height * ratio)
+        ratio = float(new_height) / self.height
+        width = math.ceil(self.width * ratio)
+        height = math.ceil(self.height * ratio)
+        size = (int(width), int(height))
+
         im = self._im.resize(size)
         return im
 
@@ -144,7 +147,7 @@ class ImageSoup():
     def search(self, query, image_size=None, aspect_ratio=None, n_images=100):
         FIRST_SEARCH_RESULT_PAGE = 0
         RESULTS_PER_PAGE = 100  # Returned by Google Images
-        LAST_SEARCH_RESULT_PAGE = math.ceil(n_images / RESULTS_PER_PAGE)
+        LAST_SEARCH_RESULT_PAGE = int(math.ceil(float(n_images) / RESULTS_PER_PAGE))
 
         images_results = []
         for page_number in range(FIRST_SEARCH_RESULT_PAGE, LAST_SEARCH_RESULT_PAGE):
@@ -158,3 +161,7 @@ class ImageSoup():
             images_results.extend(self.get_images_results(images_data))
         search_result = images_results[:n_images]
         return search_result
+
+
+soup = ImageSoup()
+soup.search('python', n_images=20)

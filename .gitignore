@@ -4,7 +4,7 @@ cover/
 dist/
 build/
 docs/_build
-requests.egg-info/
+imagesoup.egg-info/
 *.pdf
 *.pyc
 *.swp

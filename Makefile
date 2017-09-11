@@ -9,4 +9,4 @@ flake8:
 
 publish:
 	python3 setup.py sdist upload
-	rm -fr build dist .egg requests.egg-info
+	rm -fr build dist .egg imagesoup.egg-info

@@ -1,6 +1,7 @@
 import os
 from setuptools import setup
 
+from codecs import open
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -12,7 +13,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 about = {}
-with open(os.path.join(here, 'imagesoup', '__version__.py'), 'r', encoding='utf-8') as f:
+with open(os.path.join(here, 'imagesoup', '__version__.py'), 'r', 'utf-8') as f:
     exec(f.read(), about)
 
 packages = ['imagesoup']
@@ -36,6 +37,7 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Topic :: Multimedia :: Graphics',
         'Topic :: Internet :: WWW/HTTP :: Indexing/Search',
