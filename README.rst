@@ -5,6 +5,9 @@ ImageSoup: Image Searching for Humans
 .. image:: https://img.shields.io/pypi/v/imagesoup.svg
   :target: https://pypi.python.org/pypi/imagesoup
 
+.. image:: https://img.shields.io/pypi/l/imagesoup.svg
+  :target: https://pypi.python.org/pypi/imagesoup
+
 .. image:: https://travis-ci.org/rafpyprog/ImageSoup.svg?branch=master
   :target: https://travis-ci.org/rafpyprog/ImageSoup
 
