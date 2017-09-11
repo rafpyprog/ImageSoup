@@ -15,7 +15,7 @@ ImageSoup: Image Searching for Humans
   :target: https://codecov.io/gh/rafpyprog/ImageSoup
 
   
-Basic Tutorial  
+Quick Tutorial  
 --------------
 
 .. code-block:: python
@@ -51,6 +51,59 @@ To install ImageSoup, simply use pip:
 .. code-block:: bash
 
     $ pip install imagesoup
+
+Advanced Search
+---------------
+
+**image_size:** string, tuple(width, height)
+    Find images in any size you need.
+
+* (width, height)
+
+
+* icon
+* medium
+* large
+
+
+* 400x300+
+* 640x480+
+* 800x600+
+* 1024x768+
+
+
+* 2mp+
+* 4mp+
+* 8mp+
+* 10mp+
+* 12mp+
+* 15mp+
+* 20mp+
+* 40mp+
+* 70mp+
+
+
+**aspect_ratio:** string
+    Specify the shape of images.
+
+* tall
+* square
+* wide
+* panoramic
+
+.. code-block:: python
+
+    >>> from imagesoup import ImageSoup
+    >>> soup = ImageSoup()
+    >>> images = soup.search('Cersei Lannister', image_size='icon', aspect_ratio='square')
+    >>> im = images[0]
+    >>> im.URL
+    'http://cdn.images.express.co.uk/img/dynamic/galleries/64x64/264415.jpg'
+    >>> im.size
+    (64, 64)
+    >>> im.show()
+.. image:: http://cdn.images.express.co.uk/img/dynamic/galleries/64x64/264415.jpg
+
     
 
 
