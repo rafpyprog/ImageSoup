@@ -82,11 +82,11 @@ def test_imageresult_resize():
 
 def test_get_image_main_color():
     soup = ImageSoup()
-    images = soup.search('white')
+    images = soup.search('blue site:en.wikipedia.org')
     im = images[0]
     main_color = im.main_color(reduce_size=True)
     assert len(main_color) == 1
-    assert main_color[0][0] == 'white'
+    assert main_color[0][0] == 'blue'
 
 
 def test_imageresult_tofile():
