@@ -94,8 +94,10 @@ Advanced Search
 .. code-block:: python
 
     >>> from imagesoup import ImageSoup
+    >>>
     >>> soup = ImageSoup()
     >>> images = soup.search('Cersei Lannister', image_size='icon', aspect_ratio='square')
+    >>>
     >>> im = images[0]
     >>> im.URL
     'http://cdn.images.express.co.uk/img/dynamic/galleries/64x64/264415.jpg'
