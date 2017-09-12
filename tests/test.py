@@ -1,7 +1,8 @@
 import os
 import pytest
 
-
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from imagesoup import ImageSoup, ImageResult
 from imagesoup.utils import Blacklist
 
@@ -27,7 +28,7 @@ def test_search_n_images_set_by_user():
 
 def test_search_with_image_size_parameter():
     soup = ImageSoup()
-    images = soup.search('python', image_size='large')
+    images = soup.search('python site:python.org', image_size='large')
     im = images[0]
     width, height = im.size
     assert width > 500 and height > 500
@@ -43,7 +44,7 @@ def test_search_image_exact_size():
 
 def test_search_image_aspect_ratio():
     soup = ImageSoup()
-    images = soup.search('python', aspect_ratio='tall')
+    images = soup.search('python site:python.org', aspect_ratio='tall')
     im = images[0]
     assert im.height > im.width
 

@@ -28,7 +28,9 @@ def image_size_parameter(option):
     IMAGE_SIZE_PARAM = 'isz'
     if isinstance(option, (tuple, list)):
         width, height = option
-        return IMAGE_SIZE_PARAM + ':{},iszw:{},iszh:{}'.format(IMAGE_SIZE_OPTIONS['exactly'], width, height)
+        values = ':{},iszw:{},iszh:{}'.format(IMAGE_SIZE_OPTIONS['exactly'],
+                                              width, height)
+        return IMAGE_SIZE_PARAM + values
     else:
         return IMAGE_SIZE_PARAM + ':' + IMAGE_SIZE_OPTIONS[option]
 
@@ -38,7 +40,8 @@ def image_aspect_parameters(aspect_ratio, image_size):
         return None
     else:
         IMAGE_RELATED = 'tbs='
-        options = ','.join([i for i in [aspect_ratio, image_size] if i is not None])
+        values = filter(lambda x: x is not None, [aspect_ratio, image_size])
+        options = ','.join(list(values))
         return '{}{}'.format(IMAGE_RELATED, options)
 
 

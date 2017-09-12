@@ -2,15 +2,13 @@ import io
 import json
 import math
 
-from PIL import Image, ImageFile
+from PIL import Image
 from bs4 import BeautifulSoup
 import requests
-from requests.exceptions import HTTPError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from . import colors
 from . import parameters
-
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -121,21 +119,29 @@ class ImageResult():
 
 class ImageSoup():
     def __init__(self):
-        self.user_agent = self.user_agent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
+        self.user_agent = ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 '
+                           '(KHTML, like Gecko) Chrome/41.0.2228.0 '
+                           'Safari/537.36')
 
     def get_search_result_page(self, URL):
         headers = {'User-Agent': self.user_agent}
         response = requests.get(URL, headers=headers)
         if response.status_code != 200:
-            raise('Error on search request - HTTP {}. Expected 200'.format(response.status_code))
+            error_msg = 'Error on search request - HTTP {}. Expected 200'
+            raise(error_msg.format(response.status_code))
         search_result_HTML = response.text
         return search_result_HTML
 
     def get_images_data_from_HTML(self, HTML):
         soup = BeautifulSoup(HTML, 'html.parser')
-        divs_has_class = [div for div in soup.findAll("div") if div.has_attr('class') is True]
-        images_data = [div for div in divs_has_class if div['class'] == ['rg_meta', 'notranslate']]
-        return images_data
+
+        divs = soup.findAll('div')
+        divs_has_class = list(filter(lambda x: x.has_attr('class'), divs))
+
+        IMAGE_CLASS = ['rg_meta', 'notranslate']
+        images_data = filter(lambda x: x['class'] == IMAGE_CLASS,
+                             divs_has_class)
+        return list(images_data)
 
     def get_images_results(self, images_data):
         results = []
@@ -147,11 +153,14 @@ class ImageSoup():
     def search(self, query, image_size=None, aspect_ratio=None, n_images=100):
         FIRST_SEARCH_RESULT_PAGE = 0
         RESULTS_PER_PAGE = 100  # Returned by Google Images
-        LAST_SEARCH_RESULT_PAGE = int(math.ceil(float(n_images) / RESULTS_PER_PAGE))
+
+        LAST_SEARCH_RESULT_PAGE = math.ceil(float(n_images) / RESULTS_PER_PAGE)
 
         images_results = []
-        for page_number in range(FIRST_SEARCH_RESULT_PAGE, LAST_SEARCH_RESULT_PAGE):
-            URL = parameters.query_builder(query, image_size, aspect_ratio, page_number)
+        for page_number in range(FIRST_SEARCH_RESULT_PAGE,
+                                 int(LAST_SEARCH_RESULT_PAGE)):
+            URL = parameters.query_builder(query, image_size, aspect_ratio,
+                                           page_number)
             HTML = self.get_search_result_page(URL)
             images_data = self.get_images_data_from_HTML(HTML)
             if len(images_data) == 0:  # end of results. stop interating
@@ -161,7 +170,3 @@ class ImageSoup():
             images_results.extend(self.get_images_results(images_data))
         search_result = images_results[:n_images]
         return search_result
-
-
-soup = ImageSoup()
-soup.search('python', n_images=20)

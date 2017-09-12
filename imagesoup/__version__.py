@@ -1,3 +1,5 @@
+# flake8: noqa
+
 __title__ = 'imagesoup'
 __description__ = 'A Python library designed for quick search and downloading images.'
 __url__ = 'https://github.com/rafpyprog/ImageSoup'

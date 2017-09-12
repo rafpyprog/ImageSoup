@@ -18,7 +18,8 @@ def color_analysis(image):
 
     # Calculate percent for each color
     for color in color_counter:
-        color_counter[color] = color_counter[color] / (image.width * image.height)
+        pixel_count = image.width * image.height
+        color_counter[color] = color_counter[color] / pixel_count
 
     return color_counter
 
