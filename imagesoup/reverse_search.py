@@ -1,3 +1,5 @@
+import os
+
 from bs4 import BeautifulSoup
 import requests
 from selenium.webdriver import Chrome
@@ -16,6 +18,16 @@ class ReverseSearch():
         self.result_HTML = None
         self.guess = None
         self.similar = None
+        self.chromedriver_path = None
+
+    def set_chrome(self):
+        if not self.driver:
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            if self.chromedriver_path:
+                self.driver = Chrome(self.chromedriver_path, chrome_options=chrome_options)
+            else:
+                self.driver = Chrome(chrome_options=chrome_options)
 
     def parse_guess(self):
         BEST_GUESS_CLASS = '_gUb'
@@ -47,10 +59,7 @@ class ReverseSearch():
         return result_URL
 
     def search(self, filepath, language='en'):
-        if not self.driver:
-            chrome_options = Options()
-            chrome_options.add_argument("--headless")
-            self.driver = Chrome(chrome_options=chrome_options)
+        self.set_chrome()
 
         search_result_URL = self.upload_to_google_images(filepath)
         self.driver.get(search_result_URL + '&hl={}'.format(language))
