@@ -5,6 +5,7 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from imagesoup import ImageSoup, ImageResult
 from imagesoup.utils import Blacklist
+from imagesoup.reverse_search import ReverseSearch
 
 
 def test_creating_soup():
@@ -144,6 +145,7 @@ def test_blacklist_reset():
     bl.reset()
     assert bl.domains == []
 
+
 def test_blacklist_query_string():
     bl = Blacklist()
     bl.add('http://www.python.org')
@@ -151,3 +153,23 @@ def test_blacklist_query_string():
     query = '-site:python.org -site:github.com'
     assert bl.query_string() == query
     os.remove(bl.filename)
+
+
+def test_reverse_search_init():
+    revsoup = ReverseSearch()
+    assert isinstance(revsoup, ReverseSearch)
+
+
+def test_reverse_search_search():
+    here = os.path.abspath(os.path.dirname(__file__))
+    filepath = os.path.join(here, 'test_image1.png')
+    revsoup = ReverseSearch()
+    assert revsoup.search(filepath) is None
+
+
+def test_reverse_guess():
+    here = os.path.abspath(os.path.dirname(__file__))
+    filepath = os.path.join(here, 'test_image1.png')
+    revsoup = ReverseSearch()
+    revsoup.search(filepath)
+    assert revsoup.guess == 'python logo'
