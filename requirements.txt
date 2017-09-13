@@ -4,4 +4,5 @@ pytest>3
 pytest-cov
 requests>=2.13.0
 selenium
+ujson
 webcolors
