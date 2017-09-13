@@ -7,7 +7,11 @@ from imagesoup import ImageSoup, ImageResult
 from imagesoup.utils import Blacklist
 from imagesoup.reverse_search import ReverseSearch
 
-CHROMEDRIVER_PATH = os.getenv('CHROME_DRIVER_PATH')
+
+@pytest.fixture
+def chrome_driver_path():
+    path = os.getenv('CHROME_DRIVER_PATH')
+    return path
 
 
 def test_creating_soup():
@@ -162,20 +166,18 @@ def test_reverse_search_init():
     assert isinstance(revsoup, ReverseSearch)
 
 
-def test_reverse_search_search():
+def test_reverse_search_search(chrome_driver_path):
     here = os.path.abspath(os.path.dirname(__file__))
     filepath = os.path.join(here, 'test_image1.png')
     revsoup = ReverseSearch()
-    if CHROMEDRIVER_PATH:
-        revsoup.chromedriver_path = CHROMEDRIVER_PATH
+    revsoup.chromedriver_path = chrome_driver_path
     assert revsoup.search(filepath) is None
 
 
-def test_reverse_guess():
+def test_reverse_guess(chrome_driver_path):
     here = os.path.abspath(os.path.dirname(__file__))
     filepath = os.path.join(here, 'test_image1.png')
     revsoup = ReverseSearch()
-    if CHROMEDRIVER_PATH:
-        revsoup.chromedriver_path = CHROMEDRIVER_PATH
+    revsoup.chromedriver_path = chrome_driver_path
     revsoup.search(filepath)
     assert revsoup.guess == 'python logo'
