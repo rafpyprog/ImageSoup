@@ -3,4 +3,5 @@ pillow>=4.2
 pytest>3
 pytest-cov
 requests>=2.13.0
+selenium
 webcolors
