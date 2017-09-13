@@ -1,4 +1,5 @@
 beautifulsoup4>=4.5.3
+codecov
 pillow>=4.2
 pytest>3
 pytest-cov

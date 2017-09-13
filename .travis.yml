@@ -25,4 +25,5 @@ env:
 
 script: py.test tests/test.py --verbose --cov-report term --cov-report xml --cov imagesoup
 
-after_sucess: bash <(curl -s https://codecov.io/bash)
+after_sucess:
+  - codecov
