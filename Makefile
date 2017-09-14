@@ -2,7 +2,10 @@ init:
 	pip3 install -r requirements.txt
 
 test:
-	py.test tests/test.py --verbose --cov-report term --cov-report xml --cov imagesoup
+	#py.test tests/test.py --verbose --cov-report term --cov-report xml --cov imagesoup
+	python3.5 -m pytest tests/test.py --verbose --cov-report term --cov-report xml --cov imagesoup
+	python3.6 -m pytest tests/test.py --verbose --cov-report term --cov-report xml --cov imagesoup
+	python2.7 -m pytest tests/test.py --verbose --cov-report term --cov-report xml --cov imagesoup
 
 flake8:
 	flake8 --ignore=E501,F401,E128,E402,E731,F821 imagesoup

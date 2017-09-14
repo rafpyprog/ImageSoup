@@ -23,7 +23,9 @@ class ReverseSearch():
     def set_chrome(self):
         if not self.driver:
             chrome_options = Options()
-            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--incognito')
+
             if self.chromedriver_path:
                 self.driver = Chrome(self.chromedriver_path, chrome_options=chrome_options)
             else:
@@ -68,16 +70,3 @@ class ReverseSearch():
         self.guess = self.parse_guess()
         self.similar = self.parse_similar()
         return None
-
-
-
-
-
-
-'''
-soup_rev = ReverseSearch()
-filepath = 'D:\\Projetos\\#DEV Python\\ImageSoup\\imagesoup\\MG.png'
-soup_rev.search(filepath)
-soup_rev.guess
-
-l = soup_rev.similar'''

@@ -1,21 +1,48 @@
 from distutils.version import StrictVersion
+import os
+import platform
+import re
 import sys
 import subprocess
+from subprocess import Popen, PIPE
 import zipfile
 
+import fire
 import requests
 from bs4 import BeautifulSoup
 import lxml
+from selenium.common.exceptions import WebDriverException
 
 GOOGLE_API = 'https://chromedriver.storage.googleapis.com/'
 
-def get_local_release(chrome_path):
-    from subprocess import check_output
-    cmd = [chrome_path, '-v']
-    release = check_output(cmd).decode()
-    number = release.split(' ')[1]
-    number = '.'.join(number.split('.')[:2])
-    return number
+
+def parse_chromedriver_version(cmd_stdout):
+    '''
+        cmd_stdout (string): Output from chromedriver -v
+    '''
+    CHROMEDRIVER_VERSION_PATTERN = '\d+\.\d+'
+    version = re.search(CHROMEDRIVER_VERSION_PATTERN, cmd_stdout)
+    if version:
+        return version.group()
+    else:
+        raise Exception('Unable to parse Chromedriver version {}'
+                        .format(cmd_stdout))
+
+
+def get_local_release(executable_path='chromedriver'):
+    cmd = [executable_path, '-v']
+    try:
+        process = Popen(cmd, env=os.environ,
+                        close_fds=platform.system() != 'Windows',
+                        stdout=PIPE, stderr=PIPE)
+    except OSError:
+        msg = '{} executable needs to be in PATH.'
+        raise WebDriverException(
+            msg.format(os.path.basename(executable_path)))
+    else:
+        stdout = process.communicate()[0]
+        version = parse_chromedriver_version(stdout.decode())
+    return version
 
 
 def get_latest_release():
@@ -63,7 +90,7 @@ def unzip(file, path=None):
         return os.path.join(path, z.filelist[0].filename)
 
 
-def download_chromedriver(version=None, path=None, clean_up=True, set_environ=False):
+def get_chrome(version=None, path=None, clean_up=True, set_environ=False):
     '''
         Download a Chromedriver release. If version is None, will download
         the lastest release.
@@ -79,6 +106,9 @@ def download_chromedriver(version=None, path=None, clean_up=True, set_environ=Fa
     chrome_zip = download(version, path=path)
     executable_path = unzip(chrome_zip, path=path)
 
+    if sys.platform == 'linux':
+        os.system('chmod +x ' + executable_path)
+
     if clean_up is True:
         os.remove(chrome_zip)
 
@@ -91,15 +121,19 @@ def download_chromedriver(version=None, path=None, clean_up=True, set_environ=Fa
     return executable_path
 
 
-def is_updated(chrome_path):
-    local = get_local_release(chrome_path)
+def is_updated(executable_path='chromedriver'):
+    local = get_local_release(executable_path)
     latest = get_latest_release()
-    print('Local: {} - Latest: {}'.format(local, latest))
     return StrictVersion(local) == StrictVersion(latest)
 
 
-download_chromedriver(path='D:\\', set_environ=True)
+def update():
+    if is_updated():
+        installed_release = get_local_release()
+        print('The installed release({}) is already up to date.'
+        .format(installed_release))
+    else:
+        return None
 
-
-get_local_release(os.environ['CHROME_DRIVER_PATH'])
-is_updated(os.environ['CHROME_DRIVER_PATH'])
+if __name__ == '__main__':
+    fire.Fire({'update': update})

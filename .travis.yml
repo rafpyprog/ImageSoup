@@ -2,6 +2,7 @@ language: python
 
 python:
   - 2.7
+  - 3.5
   - 3.6
 
 addons:
@@ -13,6 +14,7 @@ addons:
 
 before_install:
   - sudo apt-get update && sudo apt-get --reinstall install -qq language-pack-en language-pack-pt
+  - sudo apt-get python3-dev
   - sudo locale-gen --no-purge --lang pt_BR.UTF-8
   - wget -N https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip -d /home/travis/build/rafpyprog/ImageSoup/tests/

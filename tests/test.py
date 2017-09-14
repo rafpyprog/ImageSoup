@@ -161,11 +161,13 @@ def test_blacklist_query_string():
     os.remove(bl.filename)
 
 
+@pytest.mark.reverse_search
 def test_reverse_search_init():
     revsoup = ReverseSearch()
     assert isinstance(revsoup, ReverseSearch)
 
 
+@pytest.mark.reverse_search
 def test_reverse_search_search(chrome_driver_path):
     here = os.path.abspath(os.path.dirname(__file__))
     filepath = os.path.join(here, 'test_image1.png')
@@ -174,6 +176,7 @@ def test_reverse_search_search(chrome_driver_path):
     assert revsoup.search(filepath) is None
 
 
+@pytest.mark.reverse_search
 def test_reverse_guess(chrome_driver_path):
     here = os.path.abspath(os.path.dirname(__file__))
     filepath = os.path.join(here, 'test_image1.png')
