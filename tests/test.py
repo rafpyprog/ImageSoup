@@ -160,6 +160,17 @@ def test_blacklist_query_string():
     assert bl.query_string() == query
     os.remove(bl.filename)
 
+# |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||#
+
+
+@pytest.fixture
+@pytest.mark.reverse_search
+def image_filepath():
+    TEST_IMAGE_FILE = 'test_image1.png'
+    here = os.path.abspath(os.path.dirname(__file__))
+    filepath = os.path.join(here, TEST_IMAGE_FILE)
+    return filepath
+
 
 @pytest.mark.reverse_search
 def test_reverse_search_init():
@@ -168,19 +179,19 @@ def test_reverse_search_init():
 
 
 @pytest.mark.reverse_search
-def test_reverse_search_search(chrome_driver_path):
-    here = os.path.abspath(os.path.dirname(__file__))
-    filepath = os.path.join(here, 'test_image1.png')
+def test_reverse_search_search(chrome_driver_path, image_filepath):
     revsoup = ReverseSearch()
     revsoup.chromedriver_path = chrome_driver_path
-    assert revsoup.search(filepath) is None
+    assert revsoup.search(image_filepath) is None
 
 
 @pytest.mark.reverse_search
-def test_reverse_guess(chrome_driver_path):
-    here = os.path.abspath(os.path.dirname(__file__))
-    filepath = os.path.join(here, 'test_image1.png')
+def test_reverse_guess(chrome_driver_path, image_filepath):
     revsoup = ReverseSearch()
     revsoup.chromedriver_path = chrome_driver_path
-    revsoup.search(filepath)
+    revsoup.search(image_filepath)
     assert revsoup.guess == 'python logo'
+
+@pytest.mark.reverse_search
+def test_reverse_similiar_images(chrome_driver_path):
+    pass

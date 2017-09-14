@@ -1,5 +1,5 @@
 init:
-	pip3 install -r requirements.txt
+	python3.6 -m pip install -r requirements.txt -U
 
 test:
 	#py.test tests/test.py --verbose --cov-report term --cov-report xml --cov imagesoup
