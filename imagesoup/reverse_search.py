@@ -59,8 +59,9 @@ class ReverseSearch():
         multipart = {'encoded_image': (filepath, open(filepath, 'rb')),
                      'image_content': ''}
         session = requests.Session()
+        headers = {'User-Agent': self.user_agent}
         post_search = session.post(search_url, files=multipart,
-                                   allow_redirects=False)
+                                   allow_redirects=False, headers=headers)
         search_response_url = post_search.headers['Location']
         search_result = session.get(search_response_url, allow_redirects=False)
         search_result_URL = search_result.headers['Location']
