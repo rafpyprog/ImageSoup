@@ -1,0 +1,21 @@
+{
+  "tests/test_module.py::test_blacklist": true,
+  "tests/test_module.py::test_blacklist_add": true,
+  "tests/test_module.py::test_blacklist_delete": true,
+  "tests/test_module.py::test_blacklist_query_string": true,
+  "tests/test_module.py::test_blacklist_reset": true,
+  "tests/test_module.py::test_creating_soup": true,
+  "tests/test_module.py::test_get_image_main_color": true,
+  "tests/test_module.py::test_imageresult_resize": true,
+  "tests/test_module.py::test_imageresult_show_image": true,
+  "tests/test_module.py::test_imageresult_tofile": true,
+  "tests/test_module.py::test_imageresult_url": true,
+  "tests/test_module.py::test_imageresult_verify_invalid_file": true,
+  "tests/test_module.py::test_imageresult_verify_valid_file": true,
+  "tests/test_module.py::test_search_image_aspect_ratio": true,
+  "tests/test_module.py::test_search_image_exact_size": true,
+  "tests/test_module.py::test_search_image_returns_fewer_results_than_n_images": true,
+  "tests/test_module.py::test_search_n_images_set_by_user": true,
+  "tests/test_module.py::test_search_query_only_returns_100_images": true,
+  "tests/test_module.py::test_search_with_image_size_parameter": true
+}

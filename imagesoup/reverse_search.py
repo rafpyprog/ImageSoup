@@ -1,12 +1,47 @@
 import os
+from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 import requests
-from selenium.webdriver import Chrome
-from selenium.webdriver.chrome.options import Options
-import ujson
 
-from . imagesoup import ImageResult
+from . imagesoup import ImageResult, ImageSoup
+
+
+class ReverseSearchResult():
+    def __init__(self, HTML):
+        self.HTML = HTML
+        self.soup = BeautifulSoup(self.HTML, 'lxml')
+        self._label = None
+        self._similar_images = None
+
+    @property
+    def label(self):
+        if self._label is None:
+            self._label = self.parse_image_label()
+        return self._label
+
+    @property
+    def similar_images(self):
+        if self._similar_images is None:
+            self._similar_images = self.parse_similar_images()
+        return self._similar_images
+
+    def parse_image_label(self):
+        card = self.soup.find('div', {'class': 'card-section'})
+        best_guess_text = card.find_all('a')[-1].text
+        return best_guess_text
+
+    def parse_similar_images(self):
+        similar_images_a_tag = self.soup.find('a', {'class': 'iu-card-header'})
+        google_domain = 'http://www.google.com/'
+        similar_images_url = urljoin(google_domain,
+                                     similar_images_a_tag['href'])
+        image_soup = ImageSoup()
+        result_HTML = image_soup.get_search_result_page(similar_images_url)
+        images_data = image_soup.get_images_data_from_HTML(result_HTML)
+        similar_images = image_soup.get_images_results(images_data)
+        print(similar_images)
+        return similar_images
 
 
 class ReverseSearch():
@@ -14,59 +49,22 @@ class ReverseSearch():
         self.user_agent = ('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 '
                            '(KHTML, like Gecko) Chrome/41.0.2228.0 '
                            'Safari/537.36')
-        self.driver = None
-        self.result_HTML = None
-        self.guess = None
-        self.similar = None
-        self.chromedriver_path = None
 
-    def set_chrome(self):
-        if not self.driver:
-            chrome_options = Options()
-            chrome_options.add_argument('--headless')
-            chrome_options.add_argument('--incognito')
+    def search(self, filepath):
+        HTML = self.post_image_search_on_google(filepath)
+        return ReverseSearchResult(HTML)
 
-            if self.chromedriver_path:
-                self.driver = Chrome(self.chromedriver_path, chrome_options=chrome_options)
-            else:
-                self.driver = Chrome(chrome_options=chrome_options)
-
-    def parse_guess(self):
-        BEST_GUESS_CLASS = '_gUb'
-        guess = self.driver.find_element_by_class_name(BEST_GUESS_CLASS)
-        return guess.text
-
-    def parse_similar(self):
-        SIMILAR_CLASS = 'iu-card-header'
-        similar = self.driver.find_element_by_class_name(SIMILAR_CLASS)
-        similar_URL = similar.get_attribute('href')
-        self.driver.get(similar_URL)
-        IMAGE_CLASS = '.rg_meta.notranslate'
-        images = self.driver.find_elements_by_css_selector(IMAGE_CLASS)
-        return [i.get_attribute('innerHTML') for i in images]
-
-    def upload_to_google_images(self, filepath):
-        BASE_URL = 'https://www.google.com/searchbyimage/upload'
+    def post_image_search_on_google(self, filepath):
+        search_url = 'http://www.google.com/searchbyimage/upload'
         multipart = {'encoded_image': (filepath, open(filepath, 'rb')),
                      'image_content': ''}
+        session = requests.Session()
+        post_search = session.post(search_url, files=multipart,
+                                   allow_redirects=False)
+        search_response_url = post_search.headers['Location']
+        search_result = session.get(search_response_url, allow_redirects=False)
+        search_result_URL = search_result.headers['Location']
 
-        headers = {'User-Agent': self.user_agent,
-                   'origin': 'https://www.google.com',
-                   'referer': 'https://www.google.com/'}
-
-        response = requests.post(BASE_URL, files=multipart, headers=headers,
-                                 allow_redirects=False)
-
-        result_URL = response.headers['Location']
-        return result_URL
-
-    def search(self, filepath, language='en'):
-        self.set_chrome()
-
-        search_result_URL = self.upload_to_google_images(filepath)
-        self.driver.get(search_result_URL + '&hl={}'.format(language))
-
-        self.result_HTML = self.driver.page_source
-        self.guess = self.parse_guess()
-        self.similar = self.parse_similar()
-        return None
+        headers = {'User-Agent': self.user_agent}
+        result_HTML = session.get(search_result_URL, headers=headers).text
+        return result_HTML

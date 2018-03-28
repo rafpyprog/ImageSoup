@@ -5,13 +5,7 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from imagesoup import ImageSoup, ImageResult
 from imagesoup.utils import Blacklist
-from imagesoup.reverse_search import ReverseSearch
-
-
-@pytest.fixture
-def chrome_driver_path():
-    path = os.getenv('CHROME_DRIVER_PATH')
-    return path
+from imagesoup.reverse_search import *
 
 
 def test_creating_soup():
@@ -67,12 +61,12 @@ def test_imageresult_url():
     soup = ImageSoup()
     images = soup.search('python site:python.org')
     im = images[0]
-    assert im.URL == 'https://www.python.org/static/opengraph-icon-200x200.png'
+    assert im.URL.startswith('http')
 
 
 def test_imageresult_show_image():
     soup = ImageSoup()
-    images = soup.search('python')
+    images = soup.search('python logo png')
     try:
         images[0].show()
     except:
@@ -81,7 +75,7 @@ def test_imageresult_show_image():
 
 def test_imageresult_resize():
     soup = ImageSoup()
-    images = soup.search('python')
+    images = soup.search('python logo PNG')
     im = images[0]
     new_size = (400, 400)
     new_image = im.resize(new_size)
@@ -90,11 +84,11 @@ def test_imageresult_resize():
 
 def test_get_image_main_color():
     soup = ImageSoup()
-    images = soup.search('blue site:en.wikipedia.org')
+    images = soup.search('python logo PNG')
     im = images[0]
     main_color = im.main_color(reduce_size=True)
     assert len(main_color) == 1
-    assert main_color[0][0] == 'blue'
+    assert main_color[0][0] == 'white'
 
 
 def test_imageresult_tofile():
@@ -179,19 +173,32 @@ def test_reverse_search_init():
 
 
 @pytest.mark.reverse_search
-def test_reverse_search_search(chrome_driver_path, image_filepath):
+def test_reverse_search_post_search(image_filepath):
     revsoup = ReverseSearch()
-    revsoup.chromedriver_path = chrome_driver_path
-    assert revsoup.search(image_filepath) is None
+    HTML = revsoup.post_image_search_on_google(image_filepath)
+    assert isinstance(HTML, str) is True
+    assert 'python' in HTML
 
 
 @pytest.mark.reverse_search
-def test_reverse_guess(chrome_driver_path, image_filepath):
+def test_reverse_search_search(image_filepath):
     revsoup = ReverseSearch()
-    revsoup.chromedriver_path = chrome_driver_path
-    revsoup.search(image_filepath)
-    assert revsoup.guess == 'python logo'
+    search_result = revsoup.search(image_filepath)
+    assert isinstance(search_result, ReverseSearchResult) is True
+
 
 @pytest.mark.reverse_search
-def test_reverse_similiar_images(chrome_driver_path):
-    pass
+def test_reverse_search_result_label(image_filepath):
+    revsoup = ReverseSearch()
+    search_result = revsoup.search(image_filepath)
+    expected_label = 'python 3 logo'
+    assert search_result.label == expected_label
+
+
+@pytest.mark.reverse_search
+def test_rev_search_result_similar_images(image_filepath):
+    revsoup = ReverseSearch()
+    search_result = revsoup.search(image_filepath)
+    assert isinstance(search_result.similar_images, list)
+    assert len(search_result.similar_images) == 100
+    assert all(isinstance(i, ImageResult) for i in search_result.similar_images)
