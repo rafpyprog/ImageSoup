@@ -163,6 +163,7 @@ def image_filepath():
     TEST_IMAGE_FILE = 'test_image1.png'
     here = os.path.abspath(os.path.dirname(__file__))
     filepath = os.path.join(here, TEST_IMAGE_FILE)
+    assert os.path.isfile(filepath) is True
     return filepath
 
 
