@@ -16,6 +16,10 @@ ImageSoup: Image Searching for Humans
 
 .. image:: https://codecov.io/gh/rafpyprog/ImageSoup/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/rafpyprog/ImageSoup
+  
+.. image:: https://img.shields.io/pypi/dm/imagesoup.svg
+  :target: https://pypi.org/project/imagesoup/
+
 
   
 Quick Tutorial  
