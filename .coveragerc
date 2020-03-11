@@ -1,6 +1,7 @@
 [run]
 omit = *eggs*
-       tests/w3c.py
        dev.py
        setup.py
+       env/*
        tests/*
+

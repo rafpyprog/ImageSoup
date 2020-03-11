@@ -1,5 +1,7 @@
 .coverage
 .cache/
+.pytest_cache/
+.vscode/
 cover/
 dist/
 build/

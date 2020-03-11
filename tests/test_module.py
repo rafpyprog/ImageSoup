@@ -1,22 +1,58 @@
 import os
 import pytest
 
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from imagesoup import ImageSoup, ImageResult
+
+from bs4 import BeautifulSoup
+from imagesoup import ImageSoup, ImageResult, parameters
 from imagesoup.utils import Blacklist
 from imagesoup.reverse_search import *
 
 
+SEARCH_QUERY = "python"
+
+
 def test_creating_soup():
+    assert isinstance(ImageSoup(), ImageSoup)
+
+
+def test_get_search_result_page():
+    EXPECTED_PAGE_TITLE = f"{SEARCH_QUERY} - Google Search"
+
+    url = parameters.query_builder(SEARCH_QUERY)
+    html = ImageSoup().get_search_result_page(url)
+
+    assert isinstance(html, str)
+    assert BeautifulSoup(html, features="html.parser").title.text == EXPECTED_PAGE_TITLE
+
+
+def test_get_results_data_id_from_html():
+    url = parameters.query_builder(SEARCH_QUERY)
     soup = ImageSoup()
-    assert isinstance(soup, ImageSoup)
+    html = soup.get_search_result_page(url)
+    images_data = soup.get_results_data_id_from_HTML(html)
+    assert isinstance(images_data, list)
+    assert len(images_data) == 20
+
+
+def test_get_image_results():
+    url = parameters.query_builder(SEARCH_QUERY)
+
+    soup = ImageSoup()
+    html = soup.get_search_result_page(url)
+    images_data = soup.get_results_data_id_from_HTML(html)
+
+    image_results = soup.get_images_results(images_data)
+
+    assert isinstance(image_results, list)
+    assert all(isinstance(i, ImageResult) for i in image_results)
+    assert len(image_results) == 20
 
 
 def test_search_query_only_returns_100_images():
     soup = ImageSoup()
     images = soup.search('python')
     assert len(images) == 100
+    assert all(isinstance(img, ImageResult) for img in images)
 
 
 def test_search_n_images_set_by_user():
@@ -203,3 +239,5 @@ def test_rev_search_result_similar_images(image_filepath):
     assert isinstance(search_result.similar_images, list)
     assert len(search_result.similar_images) == 100
     assert all(isinstance(i, ImageResult) for i in search_result.similar_images)
+
+

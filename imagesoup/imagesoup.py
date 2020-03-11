@@ -1,6 +1,7 @@
 import io
 import json
 import math
+from typing import List
 
 from PIL import Image
 from bs4 import BeautifulSoup
@@ -123,7 +124,7 @@ class ImageSoup():
                            '(KHTML, like Gecko) Chrome/41.0.2228.0 '
                            'Safari/537.36')
 
-    def get_search_result_page(self, URL):
+    def get_search_result_page(self, URL: str) -> str:
         headers = {'User-Agent': self.user_agent}
         response = requests.get(URL, headers=headers)
         if response.status_code != 200:
@@ -132,18 +133,17 @@ class ImageSoup():
         search_result_HTML = response.text
         return search_result_HTML
 
-    def get_images_data_from_HTML(self, HTML):
-        soup = BeautifulSoup(HTML, 'html.parser')
+    def get_results_data_id_from_HTML(self, html: str) -> List[str]:
+        PARSER = "html.parser"
+        SEARCH_RESULT_TAG = "div"
+        SEARCH_RESULT_ATTRIBUTES = {"data-id": True, "jsname": True}
 
-        divs = soup.findAll('div')
-        divs_has_class = list(filter(lambda x: x.has_attr('class'), divs))
+        soup = BeautifulSoup(html, features=PARSER)
+        results = soup.find_all(SEARCH_RESULT_TAG, SEARCH_RESULT_ATTRIBUTES)
+        results_data_ids = [i["data-id"] for i in results]
+        return results_data_ids
 
-        IMAGE_CLASS = ['rg_meta', 'notranslate']
-        images_data = filter(lambda x: x['class'] == IMAGE_CLASS,
-                             divs_has_class)
-        return list(images_data)
-
-    def get_images_results(self, images_data):
+    def get_images_results(self, images_data: List[str]) -> List[ImageResult]:
         results = []
         for image in images_data:
             URL = json.loads(image.text)['ou']
@@ -162,11 +162,14 @@ class ImageSoup():
             URL = parameters.query_builder(query, image_size, aspect_ratio,
                                            page_number)
             HTML = self.get_search_result_page(URL)
-            images_data = self.get_images_data_from_HTML(HTML)
-            if len(images_data) == 0:  # end of results. stop interating
+            results_data_ids = self.get_results_data_id_from_HTML(HTML)
+
+            if len(results_data_id) == 0:  # end of results. stop interating
                 msg = 'Search query "{}" returned only {} images.'
-                print(msg.format(query, len(images_results)))
+                print(msg.format(query, len(results_data_ids)))
                 break
-            images_results.extend(self.get_images_results(images_data))
+
+            images_results.extend(self.get_images_results(results_data_ids))
+
         search_result = images_results[:n_images]
         return search_result
